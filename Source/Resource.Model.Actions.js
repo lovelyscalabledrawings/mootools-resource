@@ -51,12 +51,12 @@ Resource.Model.extend({
     return function() {
       var args = Array.prototype.slice.call(arguments, 0);
       if (typeof args[args.length - 1] == 'function') var callback = args.pop();
-      Object.append(options, options.action.apply(this, args));
-      if (options.arguments !== false) {
+      var opts = Object.merge({}, options, options.action.apply(this, args));
+      if (opts.arguments !== false) {
         for (var i = 0, arg, j = args.length; i < j; i++) {
           if ((arg = args[i])) {
             if (arg.parseQueryString) {
-              if (!options.data) options.data = {};
+              if (!opts.data) options.data = {};
               Object.append(options.data, arg.parseQueryString())
             } else {
               this.set(arg);
@@ -65,7 +65,7 @@ Resource.Model.extend({
         }
       }
       this.fireEvent('before' + name.capitalize());
-      var req = this.request(options, callback);
+      var req = this.request(opts, callback);
       return req.chain(function(data) {
         this.fireEvent('after' + name.capitalize(), data);
         return req.callChain(data);
