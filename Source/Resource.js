@@ -199,7 +199,7 @@ Resource = new Class({
   },
 
   onFailure: function(response) {
-    return this.getParser('json').parse(JSON.decode(response))
+    return (response.match(/^\s*$/)) ? null :this.getParser('json').parse(JSON.decode(response))
   },
   
   handle: function() {
