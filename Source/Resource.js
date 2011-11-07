@@ -199,7 +199,7 @@ Resource = new Class({
   },
 
   onFailure: function(response) {
-    return (response.match(/^\s*$/)) ? null :this.getParser('json').parse(JSON.decode(response))
+    return (response && response.match(/^\s*$/)) ? null : this.getParser('json').parse(JSON.decode(response))
   },
   
   handle: function() {
@@ -234,7 +234,7 @@ Resource = new Class({
   },
   
   getURL: function(route, thing) {
-    var prefix = thing.prefix || (this.options.prefix && this.options.prefix.call ? this.options.prefix(thing) : this.options.prefix);
+    var prefix = thing.prefix || (this.options.prefix && this.options.prefix.call ? this.options.prefix(thing) : this.options.prefix) || '';
     var route = (this.options.urls[route] || (this.options.urls.show + '/' + route));
     if (route.charAt(0) == '/' && prefix.charAt(prefix.length - 1) == '/') prefix = prefix.substring(0, prefix.length - 1);
     return Resource.interpolate(prefix + route, thing, this.options)
